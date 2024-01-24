@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from "react";
-import ListSubheader from "@mui/material/ListSubheader";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
+import React, { useEffect, useState, useContext } from "react";
+import { contextProvider } from "../../../../App";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Collapse from "@mui/material/Collapse";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import SendIcon from "@mui/icons-material/Send";
@@ -16,13 +12,21 @@ import SanitizerIcon from "@mui/icons-material/Sanitizer";
 import CakeIcon from "@mui/icons-material/Cake";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
-import { Typography } from "@mui/material";
+import {
+  Typography,
+  List,
+  ListItemButton,
+  ListItemText,
+  Collapse,
+  ListSubheader,
+} from "@mui/material";
 // firebase code//////////////
 import { db } from "../../../FireBase/FireBaseConfig";
 import { doc, getDocs, collection } from "firebase/firestore";
 export default function SideBar() {
   const [open, setOpen] = React.useState(true);
   const [categories, setCategories] = useState([]);
+  const { setAppActions } = useContext(contextProvider);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -101,7 +105,15 @@ export default function SideBar() {
         aria-labelledby="nested-list-subheader"
       >
         {categories.map((item) => (
-          <ListItemButton key={item.categoryId}>
+          <ListItemButton
+            key={item.categoryId}
+            onClick={(e) =>
+              setAppActions((prevState) => ({
+                ...prevState,
+                selectedCategory: e.target.innerText,
+              }))
+            }
+          >
             <ListItemIcon
               sx={{
                 minWidth: "35px",

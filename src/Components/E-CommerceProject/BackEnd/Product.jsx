@@ -7,6 +7,10 @@ import {
   colors,
   Select,
   TextField,
+  InputLabel,
+  MenuItem,
+  FormHelperText,
+  FormControl,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { doc, setDoc, getDocs, updateDoc } from "firebase/firestore";
@@ -21,11 +25,6 @@ import {
 import { v4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-
 export default function Product() {
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",

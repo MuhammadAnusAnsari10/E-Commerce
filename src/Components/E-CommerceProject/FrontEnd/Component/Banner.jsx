@@ -1,11 +1,17 @@
 import React from "react";
-import { Button, Grid, TextField, Typography, Box } from "@mui/material";
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/system";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 
 export default function Banner() {
   const imageURL = "../../../../../public/assets/images/grocery.webp";
