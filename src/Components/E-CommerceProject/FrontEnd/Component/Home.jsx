@@ -3,9 +3,13 @@ import React from "react";
 import SideBar from "./SideBar";
 import ProductCard from "./ProductCard";
 import Banner from "./Banner";
+import Navigation from "./Navigation";
 export default function Home() {
   return (
     <>
+      {/* <Grid container>
+        <Navigation />
+      </Grid> */}
       <Grid container>
         <Banner />
       </Grid>

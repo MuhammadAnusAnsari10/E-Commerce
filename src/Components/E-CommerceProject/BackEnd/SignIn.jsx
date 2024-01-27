@@ -7,16 +7,18 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
+  Link,
   Grid,
   Box,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../FireBase/FireBaseConfig";
-
+import { useNavigate } from "react-router-dom";
+import Home from "../FrontEnd/Component/Home";
+import { contextProvider } from "../../../App";
 function Copyright(props) {
   return (
     <Typography
@@ -28,26 +30,32 @@ function Copyright(props) {
   );
 }
 
+// TODO remove, this demo shouldn't need to reset the theme.
+
 const defaultTheme = createTheme();
 
-export default function SignUp() {
+export default function SignIn() {
+  const { setIsLogin } = useContext(contextProvider);
+  const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    ////// create account authentication
-    createUserWithEmailAndPassword(auth, userData.email, userData.password)
+    signInWithEmailAndPassword(auth, userData.email, userData.password)
       .then((userCredential) => {
         // Signed up
         const user = userCredential.user;
+        setIsLogin(true);
+        console.log(user);
+        navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
       });
   };
 
   const [userData, setUserData] = useState({
-    FirstName: "",
-    LastName: "",
     email: "",
     password: "",
   });
@@ -68,7 +76,7 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            SignIn
           </Typography>
           <Box
             component="form"
@@ -77,35 +85,6 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  value={userData.FirstName}
-                  onChange={(e) =>
-                    setUserData({ ...userData, FirstName: e.target.value })
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                  value={userData.LastName}
-                  onChange={(e) =>
-                    setUserData({ ...userData, LastName: e.target.value })
-                  }
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -142,15 +121,8 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              SignIn
             </Button>
-            <Grid container sx={{ display: "flex", justifyContent: "center" }}>
-              <Grid item>
-                <Link to="/signin">
-                  <Button>Already have an account? Sign in</Button>
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />

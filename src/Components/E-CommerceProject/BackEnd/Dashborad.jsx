@@ -17,16 +17,12 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import hoistNonReactStatics from "hoist-non-react-statics";
-import Product from "./Product";
-import Order from "./Order";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Outlet } from "react-router-dom";
 import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
 import ConfirmationNumberRoundedIcon from "@mui/icons-material/ConfirmationNumberRounded";
-import Category from "./Category";
-import Coupan from "./Coupan";
-import Home from "../FrontEnd/Component/Home";
+import HomeIcon from "@mui/icons-material/Home";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -108,28 +104,29 @@ export default function Dashboard() {
 
   const menuItem = [
     {
+      text: "Home",
+      icon: <HomeIcon />,
+      path: "/",
+    },
+    {
       text: "Add Product",
       icon: <LocalGroceryStoreIcon />,
       path: "product",
-      element: <Product />,
     },
     {
       text: "Order",
       icon: <EditNoteIcon />,
-      path: "/order",
-      element: <Order />,
+      path: "order",
     },
     {
       text: "Category",
       icon: <CategoryRoundedIcon />,
-      path: "/category",
-      element: <Category />,
+      path: "category",
     },
     {
       text: "Coupan",
       icon: <ConfirmationNumberRoundedIcon />,
-      path: "/coupan",
-      element: <Coupan />,
+      path: "coupan",
     },
   ];
 
@@ -202,12 +199,7 @@ export default function Dashboard() {
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
-          <Routes>
-            <Route path="/product" element={<Product />} />
-            <Route path="/order" element={<Order />} />
-            <Route path="/category" element={<Category />} />
-            <Route path="/coupan" element={<Coupan />} />
-          </Routes>
+          <Outlet />
         </Box>
       </Box>
     </>
