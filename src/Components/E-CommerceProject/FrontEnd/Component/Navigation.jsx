@@ -198,7 +198,13 @@ function Navigation() {
             <Link to="/signup">
               <Button
                 variant="contained"
-                sx={{ backgroundColor: "seagreen", marginRight: "1%" }}
+                sx={{
+                  backgroundColor: "seagreen",
+                  marginRight: "1%",
+                  "&:hover": {
+                    backgroundColor: "seagreen",
+                  },
+                }}
               >
                 Join
               </Button>

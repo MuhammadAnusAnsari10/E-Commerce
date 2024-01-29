@@ -66,6 +66,14 @@ export default function Product() {
         productCategory: selectedCategory,
       });
       docID = docRef.id;
+
+      setProductInfo({
+        productTitle: "",
+        productDescription: "",
+        productPrice: "",
+        productImageName: "",
+        userRoll: 1,
+      });
     } catch (e) {
       console.error("Error adding document: ", e);
     }

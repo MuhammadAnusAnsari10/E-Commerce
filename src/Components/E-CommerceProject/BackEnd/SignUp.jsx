@@ -11,7 +11,7 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -31,14 +31,15 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
-
     ////// create account authentication
     createUserWithEmailAndPassword(auth, userData.email, userData.password)
       .then((userCredential) => {
         // Signed up
         const user = userCredential.user;
+        navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
