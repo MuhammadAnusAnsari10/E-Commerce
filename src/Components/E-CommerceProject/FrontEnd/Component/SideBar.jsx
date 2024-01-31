@@ -19,6 +19,7 @@ import {
   ListItemText,
   Collapse,
   ListSubheader,
+  Grid,
 } from "@mui/material";
 // firebase code//////////////
 import { db } from "../../../FireBase/FireBaseConfig";
@@ -99,34 +100,38 @@ export default function SideBar() {
   ];
   return (
     <>
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-      >
-        {categories.map((item) => (
-          <ListItemButton
-            key={item.categoryId}
-            onClick={(e) =>
-              setAppActions((prevState) => ({
-                ...prevState,
-                selectedCategory: e.target.innerText,
-              }))
-            }
+      <Grid container>
+        <Grid item xs={3}>
+          <List
+            sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+            component="nav"
+            aria-labelledby="nested-list-subheader"
           >
-            <ListItemIcon
-              sx={{
-                minWidth: "35px",
-              }}
-            >
-              {item.catIcon}
-            </ListItemIcon>
-            <Typography fontSize="small" component="small">
-              {item.categoryName}
-            </Typography>
-          </ListItemButton>
-        ))}
-      </List>
+            {categories.map((item) => (
+              <ListItemButton
+                key={item.categoryId}
+                onClick={(e) =>
+                  setAppActions((prevState) => ({
+                    ...prevState,
+                    selectedCategory: e.target.innerText,
+                  }))
+                }
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: "35px",
+                  }}
+                >
+                  {item.catIcon}
+                </ListItemIcon>
+                <Typography fontSize="small" component="small">
+                  {item.categoryName}
+                </Typography>
+              </ListItemButton>
+            ))}
+          </List>
+        </Grid>
+      </Grid>
     </>
   );
 }

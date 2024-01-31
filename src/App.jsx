@@ -18,6 +18,12 @@ import Dialog from "./Components/E-CommerceProject/FrontEnd/DialogBox";
 // import SingleProduct from "./Components/E-CommerceProject/FrontEnd/Component/SingleProduct";
 export const contextProvider = createContext();
 function App() {
+  const [isProducts, setIsProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [appActions, setAppActions] = useState({
+    selectedCategory: "",
+  });
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -33,14 +39,7 @@ function App() {
 
     fetchProducts();
   }, []);
-  const [isProducts, setIsProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLogin, setIsLogin] = useState(false);
-  const [appActions, setAppActions] = useState({
-    selectedCategory: "",
-  });
 
-  // console.log(appActions.selectedCategory);
   return (
     <>
       {/* <Dialog /> */}
