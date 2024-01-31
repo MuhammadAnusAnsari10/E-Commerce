@@ -1,71 +1,88 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import PropTypes from "prop-types";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Skeleton from "@mui/material/Skeleton";
 
-export default function DialogBox() {
-  const [open, setOpen] = React.useState(false);
-  const [scroll, setScroll] = React.useState("paper");
+const data = [
+  {
+    src: "https://i.ytimg.com/vi/pLqipJNItIo/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLBkklsyaw9FxDmMKapyBYCn9tbPNQ",
+    title: "Don Diablo @ Tomorrowland Main Stage 2019 | Official…",
+    channel: "Don Diablo",
+    views: "396k views",
+    createdAt: "a week ago",
+  },
+  {
+    src: "https://i.ytimg.com/vi/_Uu12zY01ts/hqdefault.jpg?sqp=-oaymwEZCPYBEIoBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLCpX6Jan2rxrCAZxJYDXppTP4MoQA",
+    title: "Queen - Greatest Hits",
+    channel: "Queen Official",
+    views: "40M views",
+    createdAt: "3 years ago",
+  },
+  {
+    src: "https://i.ytimg.com/vi/kkLk2XWMBf8/hqdefault.jpg?sqp=-oaymwEYCNIBEHZIVfKriqkDCwgBFQAAiEIYAXAB&rs=AOn4CLB4GZTFu1Ju2EPPPXnhMZtFVvYBaw",
+    title: "Calvin Harris, Sam Smith - Promises (Official Video)",
+    channel: "Calvin Harris",
+    views: "130M views",
+    createdAt: "10 months ago",
+  },
+];
 
-  const handleClickOpen = (scrollType) => () => {
-    setOpen(true);
-    setScroll(scrollType);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const descriptionElementRef = React.useRef(null);
-  React.useEffect(() => {
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [open]);
+function Media(props) {
+  const { loading = false } = props;
 
   return (
-    <React.Fragment>
-      {/* <Button onClick={handleClickOpen("paper")}>scroll=paper</Button> */}
-      <Button onClick={handleClickOpen("body")}>scroll=body</Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        scroll={scroll}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-      >
-        <DialogTitle id="scroll-dialog-title">Subscribe</DialogTitle>
-        <DialogContent dividers={scroll === "paper"}>
-          <DialogContentText
-            id="scroll-dialog-description"
-            ref={descriptionElementRef}
-            tabIndex={-1}
-          >
-            <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries, but also the leap into
-              electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets
-              containing Lorem Ipsum passages, and more recently with desktop
-              publishing software like Aldus PageMaker including versions of
-              Lorem
-            </p>
-          </DialogContentText>
-        </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
-        </DialogActions> */}
-      </Dialog>
-    </React.Fragment>
+    <Grid container wrap="nowrap">
+      {(loading ? Array.from(new Array(3)) : data).map((item, index) => (
+        <Box key={index} sx={{ width: 210, marginRight: 0.5, my: 5 }}>
+          {item ? (
+            <img
+              style={{ width: 210, height: 118 }}
+              alt={item.title}
+              src={item.src}
+            />
+          ) : (
+            <Skeleton variant="rectangular" width={210} height={118} />
+          )}
+
+          {item ? (
+            <Box sx={{ pr: 2 }}>
+              <Typography gutterBottom variant="body2">
+                {item.title}
+              </Typography>
+              <Typography
+                display="block"
+                variant="caption"
+                color="text.secondary"
+              >
+                {item.channel}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {`${item.views} • ${item.createdAt}`}
+              </Typography>
+            </Box>
+          ) : (
+            <Box sx={{ pt: 0.5 }}>
+              <Skeleton />
+              <Skeleton width="60%" />
+            </Box>
+          )}
+        </Box>
+      ))}
+    </Grid>
+  );
+}
+
+Media.propTypes = {
+  loading: PropTypes.bool,
+};
+
+export default function DialogBox() {
+  return (
+    <Box sx={{ overflow: "hidden" }}>
+      <Media loading />
+      <Media />
+    </Box>
   );
 }

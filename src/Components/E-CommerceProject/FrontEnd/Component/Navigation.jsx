@@ -17,7 +17,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../FireBase/FireBaseConfig";
 import { contextProvider } from "../../../../App";
 
-const pages = ["Products", "Shop", "Dashboard"];
+const pages = ["Dashboard", "Shop", "Products"];
 const settings = [
   {
     text: "Profile",
@@ -69,6 +69,7 @@ function Navigation() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          {/* logo start */}
           <Typography
             variant="h6"
             noWrap
@@ -84,8 +85,9 @@ function Navigation() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            PickBazar
           </Typography>
+          {/* logo end */}
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -146,6 +148,7 @@ function Navigation() {
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex", textAlign: "center" },
+              justifyContent: "center",
             }}
           >
             {pages.map((page) => (

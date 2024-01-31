@@ -77,6 +77,7 @@ export default function Banner() {
         >
           <Grid container>
             <Grid item xs={12}>
+              {/* main heading start */}
               <Typography
                 variant="h3"
                 sx={{
@@ -87,6 +88,10 @@ export default function Banner() {
               >
                 Groceries Delivered in 90 Minutes
               </Typography>
+              {/* main heading end */}
+
+              {/* main para start */}
+
               <Typography
                 sx={{
                   textAlign: "center",
@@ -98,7 +103,10 @@ export default function Banner() {
                 Get your healthy foods & snacks delivered at your doorsteps all
                 day every day
               </Typography>
+              {/* main para end */}
             </Grid>
+
+            {/*  button and searchBar start */}
             <Grid
               item
               xs={12}
@@ -115,23 +123,24 @@ export default function Banner() {
                 Search
               </SearchButton>
             </Grid>
+            {/*  button and searchBar end */}
           </Grid>
         </Box>
       </BackgroundImage>
       <Grid container spacing={3} marginTop="1%">
-        <Grid item xs={4}>
+        <Grid item sm={12} md={6} lg={4}>
           <img
             src="../../../../../public/assets/images/card-img-1.webp"
             width="100%"
           ></img>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={12} md={6} lg={4}>
           <img
             src="../../../../../public/assets/images/card-img-2.webp"
             width="100%"
           ></img>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={12} md={6} lg={4}>
           <img
             src="../../../../../public/assets/images/card-img-3.webp"
             width="100%"

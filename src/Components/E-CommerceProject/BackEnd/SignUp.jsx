@@ -31,7 +31,10 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     ////// create account authentication

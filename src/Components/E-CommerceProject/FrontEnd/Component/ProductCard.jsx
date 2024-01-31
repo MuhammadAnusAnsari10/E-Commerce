@@ -11,18 +11,32 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { Skeleton } from "@mui/material";
 export default function ProductCard() {
-  const { isProducts, setIsProducts, appActions } = useContext(contextProvider);
+  const { isProducts, setIsProducts, appActions, isLoading } =
+    useContext(contextProvider);
   const [clickedProduct, setClickedProduct] = useState(null);
   const [product, setProduct] = useState([]);
   const [cardId, setCardId] = useState();
 
   // ---------------- Dialog Box///////////
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(
+    localStorage.getItem("dialogOpen") === "true"
+  );
   const [scroll, setScroll] = React.useState("paper");
+
+  useEffect(() => {
+    if (open) {
+      localStorage.setItem("dialogOpen", "true");
+    }
+  }, [open]);
 
   const handleClickOpen = (scrollType, product) => () => {
     setClickedProduct(product);
+    localStorage.setItem("selectedProduct", JSON.stringify(product));
+    localStorage.setItem("products", JSON.stringify(isProducts));
+
     setOpen(true);
     setScroll(scrollType);
   };
@@ -30,8 +44,15 @@ export default function ProductCard() {
   const handleClose = () => {
     setClickedProduct(null);
     setOpen(false);
+    localStorage.setItem("dialogOpen", "false");
   };
+  const data = localStorage.getItem("selectedProduct");
+  const allPro = localStorage.getItem("products");
 
+  const allProducts = JSON.parse(allPro);
+  const getProduct = JSON.parse(data);
+
+  console.log(allProducts);
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
     if (open) {
@@ -56,14 +77,18 @@ export default function ProductCard() {
         aria-describedby="scroll-dialog-description"
         maxWidth="lg"
       >
-        {clickedProduct && (
+        {getProduct && (
           <>
             <DialogContent dividers={scroll === "paper"}>
               <Grid container spacing={2}>
                 <Grid item xs={7}>
                   <img
-                    src={clickedProduct.imageurl}
-                    style={{ width: "100%", height: "auto" }}
+                    src={getProduct.imageurl}
+                    style={{
+                      width: "90%",
+                      height: "600px",
+                      objectFit: "cover",
+                    }}
                   />
                 </Grid>
                 <Grid item xs={5}>
@@ -77,24 +102,24 @@ export default function ProductCard() {
                         cursor: "pointer",
                         transition: "0.6s",
                       },
+                      marginTop: "5%",
                     }}
                   >
-                    {clickedProduct.productTitle}
+                    {getProduct.productTitle}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{ margin: "10% 0  " }}
+                    sx={{ margin: "5% 0", lineHeight: "25px" }}
                   >
-                    {/* {clickedProduct.productDescription} */}
                     {readMore
-                      ? clickedProduct.productDescription
-                      : clickedProduct.productDescription.slice(0, 100)}
-                    {clickedProduct.productDescription.length > 130 && (
+                      ? getProduct.productDescription
+                      : getProduct.productDescription.slice(0, 100)}
+                    {getProduct.productDescription.length > 130 && (
                       <Typography
                         component="small"
                         color="primary"
-                        sx={{ color: "", cursor: "pointer" }}
+                        sx={{ color: "#009f7f", cursor: "pointer" }}
                         onClick={() => setReadMore(!readMore)}
                       >
                         {readMore ? " Read Less" : " Read More"}
@@ -109,14 +134,15 @@ export default function ProductCard() {
                       fontSize: "30px",
                     }}
                   >
-                    ${clickedProduct.productPrice}
+                    $ {getProduct.productPrice}
                   </Typography>
+                  <br />
                   <Button
                     sx={{
                       bgcolor: "#009F7F",
                       color: "white",
                       padding: "12px",
-                      margin: "10% 0 0 0 ",
+                      margin: "5% 0",
                       "&:hover": {
                         bgcolor: "#009F7F",
                         color: "white",
@@ -126,72 +152,81 @@ export default function ProductCard() {
                     Add To Shopping Cart
                   </Button>
                 </Grid>
-                {/* related products cards  start */}
-                {isProducts
-                  .filter(
-                    (product) =>
-                      product.productCategory ===
-                        clickedProduct.productCategory &&
-                      product.productId !== clickedProduct.productId
-                  )
-                  .map((item) => (
-                    <Grid item xs={3}>
-                      <Card
-                        sx={{
-                          position: "relative",
-                          transition: "0.7s",
-                          "&hover:": { transformY: "translate(20px)" },
-                          transition: "0.7s",
-                        }}
-                        // component={Link}
-                        // to={`singleproduct`}
-                        onClick={handleClickOpen("body", item)}
-                      >
-                        <Chip
-                          label="20%"
-                          size="small"
-                          sx={{
-                            position: "absolute",
-                            top: "2%",
-                            right: "2%",
-                            zIndex: 1,
-                            bgcolor: "seagreen",
-                            color: "white",
-                          }}
-                        />
 
-                        <CardMedia
-                          sx={{ height: "200px" }}
-                          image={item.imageurl}
-                          title={item.productTitle}
-                        />
-                        <CardContent>
-                          <Typography gutterBottom variant="h6" component="div">
-                            ${item.productPrice}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {item.productTitle}
-                          </Typography>
-                        </CardContent>
-                        <CardActions>
-                          <Button
-                            fullWidth
+                {/* related products cards  start */}
+                <Grid item xs={12}>
+                  <h4>Related Products</h4>
+                </Grid>
+                {allProducts &&
+                  allProducts
+                    .filter(
+                      (product) =>
+                        product.productCategory ===
+                          getProduct.productCategory &&
+                        product.productId !== getProduct.productId
+                    )
+                    .map((item) => (
+                      <Grid item xs={3} key={item.productId}>
+                        <Card
+                          sx={{
+                            position: "relative",
+                            transition: "0.7s",
+                            "&hover:": { transformY: "translate(20px)" },
+                            transition: "0.7s",
+                          }}
+                          // component={Link}
+                          // to={`singleproduct`}
+                          onClick={handleClickOpen("body", item)}
+                        >
+                          <Chip
+                            label="20%"
+                            size="small"
                             sx={{
-                              bgcolor: "#F3F4F6",
-                              color: "black",
-                              "&:hover": {
-                                bgcolor: "seagreen",
-                                color: "white",
-                              },
+                              position: "absolute",
+                              top: "2%",
+                              right: "2%",
+                              zIndex: 1,
+                              bgcolor: "seagreen",
+                              color: "white",
                             }}
-                          >
-                            Add
-                            <AddIcon />
-                          </Button>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  ))}
+                          />
+
+                          <CardMedia
+                            sx={{ height: "200px" }}
+                            image={item.imageurl}
+                            title={item.productTitle}
+                          />
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              variant="h6"
+                              component="div"
+                            >
+                              ${item.productPrice}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              {item.productTitle}
+                            </Typography>
+                          </CardContent>
+                          <CardActions>
+                            <Button
+                              fullWidth
+                              sx={{
+                                bgcolor: "#F3F4F6",
+                                color: "black",
+                                "&:hover": {
+                                  bgcolor: "seagreen",
+                                  color: "white",
+                                },
+                              }}
+                            >
+                              Add
+                              <AddIcon />
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    ))}
               </Grid>
             </DialogContent>
             <DialogActions>
@@ -215,9 +250,6 @@ export default function ProductCard() {
               <Card
                 sx={{
                   position: "relative",
-                  transition: "0.7s",
-                  "&hover:": { transformY: "translate(20px)" },
-                  transition: "0.7s",
                 }}
                 // component={Link}
                 // to={`singleproduct`}

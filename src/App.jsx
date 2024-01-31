@@ -25,6 +25,7 @@ function App() {
         const productSnapshot = await getDocs(productCollection);
         const productData = productSnapshot.docs.map((doc) => doc.data());
         setIsProducts(productData);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching categories: ", error);
       }
@@ -33,10 +34,11 @@ function App() {
     fetchProducts();
   }, []);
   const [isProducts, setIsProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [appActions, setAppActions] = useState({
     selectedCategory: "",
   });
-  const [isLogin, setIsLogin] = useState(false);
 
   // console.log(appActions.selectedCategory);
   return (
@@ -51,6 +53,7 @@ function App() {
             appActions,
             isLogin,
             setIsLogin,
+            isLoading,
           }}
         >
           <Navigation />
