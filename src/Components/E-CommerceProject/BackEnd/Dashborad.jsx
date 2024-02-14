@@ -22,7 +22,9 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Routes, Route, Link, Outlet } from "react-router-dom";
 import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
 import ConfirmationNumberRoundedIcon from "@mui/icons-material/ConfirmationNumberRounded";
+import CollectionsIcon from "@mui/icons-material/Collections";
 import HomeIcon from "@mui/icons-material/Home";
+import UpdateIcon from "@mui/icons-material/Update";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -124,6 +126,17 @@ export default function Dashboard() {
       path: "category",
     },
     {
+      text: "All Product",
+      icon: <CollectionsIcon />,
+      path: "allproduct",
+    },
+    {
+      text: "Update Product",
+      icon: <UpdateIcon />,
+      path: "updateProduct",
+    },
+
+    {
       text: "Coupan",
       icon: <ConfirmationNumberRoundedIcon />,
       path: "coupan",
@@ -135,7 +148,7 @@ export default function Dashboard() {
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
-          <Toolbar sx={{ backgroundColor: "black" }}>
+          <Toolbar sx={{ backgroundColor: "#009f7f" }}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -152,7 +165,7 @@ export default function Dashboard() {
               variant="h6"
               noWrap
               component="div"
-              sx={{ color: "red" }}
+              sx={{ color: "black", fontWeight: "bolder" }}
             >
               React E-Commerce
             </Typography>

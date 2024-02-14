@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Avatar,
@@ -15,7 +15,8 @@ import { Link, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../FireBase/FireBaseConfig";
+import { auth, db } from "../../FireBase/FireBaseConfig";
+import { collection, addDoc, documentId } from "firebase/firestore";
 
 function Copyright(props) {
   return (
@@ -31,30 +32,57 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+  const [userData, setUserData] = useState({
+    UserDocId: "",
+    FirstName: "",
+    LastName: "",
+    email: "",
+    password: "",
+    profilePic:
+      "https://www.shutterstock.com/image-vector/user-login-authenticate-icon-human-260nw-1365533969.jpg",
+  });
   const [showPassword, setShowPassword] = useState(false);
-
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    ////// create account authentication
+    const userInfo = async ({ uid }) => {
+      const docRef = await addDoc(collection(db, "User"), {
+        userAuthId: uid,
+        FirstName: userData.FirstName,
+        LastName: userData.LastName,
+        email: userData.email,
+        password: userData.password,
+        profilePic: userData.profilePic,
+        userRoll: "1",
+        address: "",
+        gender: "",
+        DOB: "",
+        country: "",
+        state: "",
+      });
+      // console.log(docRef.id);
+      setUserData((prevState) => ({
+        ...prevState,
+        UserDocId: docRef.id,
+      }));
+    };
+
+    //// create account authentication
     createUserWithEmailAndPassword(auth, userData.email, userData.password)
       .then((userCredential) => {
-        // Signed up
         const user = userCredential.user;
-        navigate("/");
+        userInfo(user.uid);
+        console.log(user.uid);
+        // navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
       });
   };
-
-  const [userData, setUserData] = useState({
-    FirstName: "",
-    LastName: "",
-    email: "",
-    password: "",
-  });
+  useEffect(() => {
+    localStorage.setItem("currentUser", JSON.stringify(userData));
+  }, [userData]);
 
   return (
     <ThemeProvider theme={defaultTheme}>

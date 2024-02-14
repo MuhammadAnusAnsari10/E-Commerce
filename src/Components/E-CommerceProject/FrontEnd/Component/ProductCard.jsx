@@ -52,7 +52,6 @@ export default function ProductCard() {
   const allProducts = JSON.parse(allPro);
   const getProduct = JSON.parse(data);
 
-  console.log(allProducts);
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
     if (open) {
@@ -80,17 +79,17 @@ export default function ProductCard() {
           <>
             <DialogContent dividers={scroll === "paper"}>
               <Grid container spacing={2}>
-                <Grid item xs={7}>
+                <Grid item sm={12} md={6}>
                   <img
                     src={getProduct.imageurl}
                     style={{
-                      width: "90%",
-                      height: "600px",
-                      objectFit: "cover",
+                      width: "100%",
+                      // height: "600px",
+                      // objectFit: "cover",
                     }}
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item sm={12} md={6}>
                   <Typography
                     gutterBottom
                     variant="h4"
@@ -165,7 +164,7 @@ export default function ProductCard() {
                         product.productId !== getProduct.productId
                     )
                     .map((item) => (
-                      <Grid item xs={3} key={item.productId}>
+                      <Grid item xs={12} sm={6} md={3} key={item.productId}>
                         <Card
                           sx={{
                             position: "relative",
@@ -239,74 +238,6 @@ export default function ProductCard() {
       </Dialog>
       {/* /////////////////////// dialog box end////////////////////////////// */}
 
-      {/* <Grid container spacing={3}>
-        {isProducts
-          .filter(
-            (item) =>
-              item.productCategory === appActions.selectedCategory ||
-              appActions.selectedCategory == ""
-          )
-          .map((item) => (
-            <Grid item xs={12} md={6} lg={4} key={item.productId}>
-             
-
-              <Card
-                sx={{
-                  position: "relative",
-                  transition: "0.8s",
-                  "&:hover": {
-                    transform: "translateY(-15px)",
-                    transition: "0.8s",
-                  },
-                }}
-                // component={Link}
-                // to={`singleproduct`}
-                onClick={handleClickOpen("body", item)}
-              >
-                <Chip
-                  label="20%"
-                  size="small"
-                  sx={{
-                    position: "absolute",
-                    top: "2%",
-                    right: "2%",
-                    zIndex: 1,
-                    bgcolor: "seagreen",
-                    color: "white",
-                  }}
-                />
-
-                <CardMedia
-                  sx={{ height: "200px" }}
-                  image={item.imageurl}
-                  title={item.productTitle}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="div">
-                    ${item.productPrice}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {item.productTitle}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    fullWidth
-                    sx={{
-                      bgcolor: "#F3F4F6",
-                      color: "black",
-                      "&:hover": { bgcolor: "seagreen", color: "white" },
-                    }}
-                  >
-                    Add
-                    <AddIcon />
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-      </Grid> */}
-
       <Grid container spacing={3}>
         {isLoading
           ? Array.from({ length: 6 }).map((_, index) => (
@@ -336,11 +267,11 @@ export default function ProductCard() {
                       position: "relative",
                       transition: "0.8s",
                       "&:hover": {
-                        transform: "translateY(-15px)", // Adjust the translateY value as needed
+                        transform: "translateY(-15px)",
                         transition: "0.8s",
                       },
                     }}
-                    onClick={() => handleClickOpen("body", item)}
+                    onClick={handleClickOpen("body", item)}
                   >
                     <Chip
                       label="20%"

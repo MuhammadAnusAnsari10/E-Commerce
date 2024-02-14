@@ -26,7 +26,7 @@ import { v4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Product() {
+export default function UpdateProduct() {
   const [productInfo, setProductInfo] = useState({
     productTitle: "",
     productDescription: "",
@@ -35,7 +35,6 @@ export default function Product() {
     userRoll: 1,
   });
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -48,68 +47,99 @@ export default function Product() {
     width: 1,
   });
 
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const editProduct = localStorage.getItem("currentEditProduct");
+  const edibtn = JSON.parse(editProduct);
+  useEffect(() => {
+    if (edibtn) {
+      setProductInfo({
+        ...productInfo,
+        productId: edibtn.productId,
+        productTitle: edibtn.productTitle,
+        productDescription: edibtn.productDescription,
+        productPrice: edibtn.productPrice,
+        productCategory: edibtn.productCategory,
+        userRoll: 1,
+      });
+    }
+  }, []);
+  console.log(productInfo);
+
   // Product State//////////////
 
-  // Add Data To fireStore///////////
-  const addProductData = async () => {
-    // add data to fire store
-    let docID;
-    try {
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth() + 1; // Month is zero-based, so add 1
-      const day = currentDate.getDate();
-      const formattedDate = `${day.toString().padStart(2, "0")}-${month
-        .toString()
-        .padStart(2, "0")}-${year}`;
+  // update Data To fireStore///////////
+  //   const addProductData = async () => {
+  //     // add data to fire store
+  //     let docID;
+  //     try {
+  //       const currentDate = new Date();
+  //       const year = currentDate.getFullYear();
+  //       const month = currentDate.getMonth() + 1; // Month is zero-based, so add 1
+  //       const day = currentDate.getDate();
+  //       const formattedDate = `${day.toString().padStart(2, "0")}-${month
+  //         .toString()
+  //         .padStart(2, "0")}-${year}`;
 
-      const docRef = await addDoc(collection(db, "Products"), {
-        productTitle: productInfo.productTitle,
-        productDescription: productInfo.productDescription,
-        productPrice: productInfo.productPrice,
-        productImageName: productInfo.productImageName.name,
-        // productId: v4(),
-        userRoll: 1,
-        productCategory: selectedCategory,
-        dateCreated: formattedDate,
-      });
-      docID = docRef.id;
-      // console.log();
-      setProductInfo({
-        productTitle: "",
-        productDescription: "",
-        productPrice: "",
-        productImageName: "",
-        userRoll: 1,
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+  //       const docRef = await addDoc(collection(db, "Products"), {
+  //         productTitle: productInfo.productTitle,
+  //         productDescription: productInfo.productDescription,
+  //         productPrice: productInfo.productPrice,
+  //         productImageName: productInfo.productImageName.name,
+  //         productId: v4(),
+  //         userRoll: 1,
+  //         productCategory: selectedCategory,
+  //         dateCreated: formattedDate,
+  //       });
+  //       docID = docRef.id;
 
-    // /////////add image to stoage//////////////////////////
+  //       setProductInfo({
+  //         productTitle: "",
+  //         productDescription: "",
+  //         productPrice: "",
+  //         productImageName: "",
+  //         userRoll: 1,
+  //       });
+  //     } catch (e) {
+  //       console.error("Error adding document: ", e);
+  //     }
 
-    const collectionRef = doc(db, "Products", `${docID}`);
-    const file = productInfo.productImageName;
-    if (!file) return;
-    const storageRef = ref(storage, `images/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // console.log(snapshot);
-      },
-      (error) => {
-        alert(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-          await updateDoc(collectionRef, {
-            imageurl: downloadURL,
-            productId: docID,
-          });
-        });
-      }
-    );
+  //     // /////////add image to stoage//////////////////////////
+
+  //     const collectionRef = doc(db, "Products", `${docID}`);
+  //     const file = productInfo.productImageName;
+  //     if (!file) return;
+  //     const storageRef = ref(storage, `images/${file.name}`);
+  //     const uploadTask = uploadBytesResumable(storageRef, file);
+  //     uploadTask.on(
+  //       "state_changed",
+  //       (snapshot) => {
+  //         console.log(snapshot);
+  //       },
+  //       (error) => {
+  //         alert(error);
+  //       },
+  //       () => {
+  //         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+  //           await updateDoc(collectionRef, {
+  //             imageurl: downloadURL,
+  //           });
+  //         });
+  //       }
+  //     );
+  //   };
+
+  const UpdateProducts = async () => {
+    const updateRef = doc(db, "Products", productInfo.productId);
+
+    await updateDoc(updateRef, {
+      productTitle: productInfo.productTitle,
+      productDescription: productInfo.productDescription,
+      productPrice: productInfo.productPrice,
+      productImageName: productInfo.productImageName.name,
+      productCategory: selectedCategory,
+    });
+    localStorage.clear();
   };
 
   // for select option////////////////
@@ -174,7 +204,9 @@ export default function Product() {
           />
 
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Category</InputLabel>
+            <InputLabel id="demo-simple-select-label">
+              {productInfo.productCategory}
+            </InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -231,9 +263,9 @@ export default function Product() {
                 color: "white",
               },
             }}
-            onClick={addProductData}
+            onClick={UpdateProducts}
           >
-            Add Product
+            Update Product
           </Button>
         </Grid>
       </Grid>

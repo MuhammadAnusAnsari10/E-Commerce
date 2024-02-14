@@ -9,16 +9,18 @@ import Order from "./Components/E-CommerceProject/BackEnd/Order";
 import Dashboard from "./Components/E-CommerceProject/BackEnd/Dashborad";
 import { createContext, useState } from "react";
 import { db, storage } from "../src/Components/FireBase/FireBaseConfig";
-// import { getDownloadURL, ref } from "firebase/storage";
 import { doc, getDocs, collection } from "firebase/firestore";
 import SignUp from "./Components/E-CommerceProject/BackEnd/SignUp";
 import SignIn from "./Components/E-CommerceProject/BackEnd/SignIn";
 import LogOut from "./Components/E-CommerceProject/BackEnd/LogOut";
 import Dialog from "./Components/E-CommerceProject/FrontEnd/DialogBox";
-// import SingleProduct from "./Components/E-CommerceProject/FrontEnd/Component/SingleProduct";
+import AllProducts from "./Components/E-CommerceProject/BackEnd/AllProducts";
+import UpdateProduct from "./Components/E-CommerceProject/BackEnd/UpdateProduct";
+import UserInfo from "./Components/E-CommerceProject/FrontEnd/Component/UserInfo";
 export const contextProvider = createContext();
 function App() {
   const [isProducts, setIsProducts] = useState([]);
+  const [isDeleteProduct, setIsDeleteProduct] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
   const [appActions, setAppActions] = useState({
@@ -38,7 +40,7 @@ function App() {
     };
 
     fetchProducts();
-  }, []);
+  }, [isDeleteProduct]);
 
   return (
     <>
@@ -53,6 +55,8 @@ function App() {
             isLogin,
             setIsLogin,
             isLoading,
+            isDeleteProduct,
+            setIsDeleteProduct,
           }}
         >
           <Navigation />
@@ -61,10 +65,13 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/logout" element={<LogOut />} />
+            <Route path="/account" element={<UserInfo />} />
 
             <Route path="/dashboard" element={<Dashboard />}>
-              <Route index path="product" element={<Product />} />
+              <Route index path="allproduct" element={<AllProducts />} />
+              <Route path="updateProduct" element={<UpdateProduct />} />
               <Route path="order" element={<Order />} />
+              <Route path="product" element={<Product />} />
               <Route path="category" element={<Category />} />
               <Route path="coupan" element={<Coupan />} />
             </Route>
