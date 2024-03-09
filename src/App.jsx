@@ -17,15 +17,18 @@ import Dialog from "./Components/E-CommerceProject/FrontEnd/DialogBox";
 import AllProducts from "./Components/E-CommerceProject/BackEnd/AllProducts";
 import UpdateProduct from "./Components/E-CommerceProject/BackEnd/UpdateProduct";
 import UserInfo from "./Components/E-CommerceProject/FrontEnd/Component/UserInfo";
+import Shop from "./Components/E-CommerceProject/FrontEnd/Component/Shop";
 export const contextProvider = createContext();
 function App() {
   const [isProducts, setIsProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isDeleteProduct, setIsDeleteProduct] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
   const [appActions, setAppActions] = useState({
     selectedCategory: "",
   });
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -57,6 +60,8 @@ function App() {
             isLoading,
             isDeleteProduct,
             setIsDeleteProduct,
+            categories,
+            setCategories,
           }}
         >
           <Navigation />
@@ -66,6 +71,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/logout" element={<LogOut />} />
             <Route path="/account" element={<UserInfo />} />
+            <Route path="/shop" element={<Shop />} />
 
             <Route path="/dashboard" element={<Dashboard />}>
               <Route index path="allproduct" element={<AllProducts />} />

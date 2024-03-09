@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, createContext } from "react";
 import { contextProvider } from "../../../../App";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
@@ -24,10 +24,14 @@ import {
 // firebase code//////////////
 import { db } from "../../../FireBase/FireBaseConfig";
 import { doc, getDocs, collection } from "firebase/firestore";
+
+export const categoryContextProvider = createContext();
+
 export default function SideBar() {
   const [open, setOpen] = React.useState(true);
-  const [categories, setCategories] = useState([]);
-  const { setAppActions } = useContext(contextProvider);
+  const [] = useState([]);
+  const { setAppActions, categories, setCategories } =
+    useContext(contextProvider);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -39,6 +43,10 @@ export default function SideBar() {
         const categoriesSnapshot = await getDocs(categoriesCollection);
         const categoriesData = categoriesSnapshot.docs.map((doc) => doc.data());
         setCategories(categoriesData);
+        localStorage.setItem(
+          "productCategories",
+          JSON.stringify(categoriesData)
+        );
       } catch (error) {
         console.error("Error fetching categories: ", error);
       }
@@ -100,6 +108,9 @@ export default function SideBar() {
   ];
   return (
     <>
+      <categoryContextProvider.Provider
+        value={{ categories, setCategories }}
+      ></categoryContextProvider.Provider>
       <Grid container>
         <Grid item xs={3}>
           <List

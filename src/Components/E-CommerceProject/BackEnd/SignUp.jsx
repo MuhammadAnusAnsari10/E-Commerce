@@ -16,7 +16,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../FireBase/FireBaseConfig";
-import { collection, addDoc, documentId } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 
 function Copyright(props) {
   return (
@@ -33,7 +33,6 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const [userData, setUserData] = useState({
-    UserDocId: "",
     FirstName: "",
     LastName: "",
     email: "",
@@ -44,11 +43,20 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const userInfo = async ({ uid }) => {
+
+    try {
+      createUserWithEmailAndPassword(auth, userData.email, userData.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+        });
+
       const docRef = await addDoc(collection(db, "User"), {
-        userAuthId: uid,
+        userDocId: "",
         FirstName: userData.FirstName,
         LastName: userData.LastName,
         email: userData.email,
@@ -61,25 +69,17 @@ export default function SignUp() {
         country: "",
         state: "",
       });
-      // console.log(docRef.id);
-      setUserData((prevState) => ({
-        ...prevState,
-        UserDocId: docRef.id,
-      }));
-    };
-
-    //// create account authentication
-    createUserWithEmailAndPassword(auth, userData.email, userData.password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        userInfo(user.uid);
-        console.log(user.uid);
-        // navigate("/");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
+      const updatedData = doc(db, "User", docRef.id);
+      await updateDoc(updatedData, {
+        userDocId: docRef.id,
       });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
+    navigate("/");
   };
+
   useEffect(() => {
     localStorage.setItem("currentUser", JSON.stringify(userData));
   }, [userData]);

@@ -130,11 +130,11 @@ export default function Dashboard() {
       icon: <CollectionsIcon />,
       path: "allproduct",
     },
-    {
-      text: "Update Product",
-      icon: <UpdateIcon />,
-      path: "updateProduct",
-    },
+    // {
+    //   text: "Update Product",
+    //   icon: <UpdateIcon />,
+    //   path: "updateProduct",
+    // },
 
     {
       text: "Coupan",

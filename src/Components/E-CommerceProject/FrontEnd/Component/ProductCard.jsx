@@ -84,8 +84,6 @@ export default function ProductCard() {
                     src={getProduct.imageurl}
                     style={{
                       width: "100%",
-                      // height: "600px",
-                      // objectFit: "cover",
                     }}
                   />
                 </Grid>

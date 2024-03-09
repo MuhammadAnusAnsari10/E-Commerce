@@ -51,6 +51,7 @@ export default function UpdateProduct() {
 
   const editProduct = localStorage.getItem("currentEditProduct");
   const edibtn = JSON.parse(editProduct);
+  console.log(edibtn);
   useEffect(() => {
     if (edibtn) {
       setProductInfo({
@@ -136,9 +137,29 @@ export default function UpdateProduct() {
       productTitle: productInfo.productTitle,
       productDescription: productInfo.productDescription,
       productPrice: productInfo.productPrice,
-      productImageName: productInfo.productImageName.name,
+      // imageurl: productInfo.productImageName,
       productCategory: selectedCategory,
     });
+    console.log(productInfo.productImageName);
+
+    const storageRef = ref(
+      storage,
+      `images/${productInfo.productImageName.name}`
+    );
+    const uploadTask = uploadBytes(storageRef, productInfo.productImageName);
+
+    try {
+      await uploadTask;
+      const url = await getDownloadURL(storageRef);
+      const updatedImage = doc(db, "Products", productInfo.productId);
+      await updateDoc(updatedImage, {
+        imageurl: url,
+      });
+      console.log("Image URL:", url);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+
     localStorage.clear();
   };
 
