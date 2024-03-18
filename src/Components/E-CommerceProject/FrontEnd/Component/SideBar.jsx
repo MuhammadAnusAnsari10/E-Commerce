@@ -12,6 +12,10 @@ import SanitizerIcon from "@mui/icons-material/Sanitizer";
 import CakeIcon from "@mui/icons-material/Cake";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+
 import {
   Typography,
   List,
@@ -29,9 +33,13 @@ export const categoryContextProvider = createContext();
 
 export default function SideBar() {
   const [open, setOpen] = React.useState(true);
-  const [] = useState([]);
-  const { setAppActions, categories, setCategories } =
-    useContext(contextProvider);
+  const {
+    setAppActions,
+    categories,
+    setCategories,
+    checkCategory,
+    setCheckCategory,
+  } = useContext(contextProvider);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -119,26 +127,52 @@ export default function SideBar() {
             aria-labelledby="nested-list-subheader"
           >
             {categories.map((item) => (
-              <ListItemButton
-                key={item.categoryId}
-                onClick={(e) =>
-                  setAppActions((prevState) => ({
-                    ...prevState,
-                    selectedCategory: e.target.innerText,
-                  }))
-                }
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: "35px",
-                  }}
-                >
-                  {item.catIcon}
-                </ListItemIcon>
-                <Typography fontSize="small" component="small">
-                  {item.categoryName}
-                </Typography>
-              </ListItemButton>
+              // <FormGroup key={item.categoryId}>
+              //   <FormControlLabel
+              //     control={
+              //       <Checkbox
+              //         onClick={(e) =>
+              //           setAppActions((prevState) => ({
+              //             ...prevState,
+              //             selectedCategory: e.target.innerText,
+              //           }))
+              //         }
+              //       />
+              //     }
+              //     label={
+              //       <Typography variant="body2" component="span">
+              //         {item.categoryName}
+              //       </Typography>
+              //     }
+              //   />
+              // </FormGroup>
+              <div key={item.categoryId}>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={() => {
+                          if (checkCategory.includes(item.categoryName)) {
+                            // If category is already selected, remove it
+                            setCheckCategory((prev) =>
+                              prev.filter(
+                                (category) => category !== item.categoryName
+                              )
+                            );
+                          } else {
+                            // If category is not selected, add it
+                            setCheckCategory((prev) => [
+                              ...prev,
+                              item.categoryName,
+                            ]);
+                          }
+                        }}
+                      />
+                    }
+                    label={item.categoryName}
+                  />
+                </FormGroup>
+              </div>
             ))}
           </List>
         </Grid>

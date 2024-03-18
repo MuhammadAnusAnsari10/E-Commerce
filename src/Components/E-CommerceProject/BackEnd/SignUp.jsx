@@ -33,6 +33,7 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const [userData, setUserData] = useState({
+    userAuthId: "",
     FirstName: "",
     LastName: "",
     email: "",
@@ -50,39 +51,59 @@ export default function SignUp() {
       createUserWithEmailAndPassword(auth, userData.email, userData.password)
         .then((userCredential) => {
           const user = userCredential.user;
+          setUserData((prev) => {
+            return { ...prev, userAuthId: user.uid };
+          });
+
+          // Save the data in Firestore database
+          const saveDataInFirebase = async () => {
+            const docRef = await addDoc(collection(db, "User"), {
+              userAuthId: "",
+              userDocId: "",
+              FirstName: userData.FirstName,
+              LastName: userData.LastName,
+              email: userData.email,
+              password: userData.password,
+              profilePic: userData.profilePic,
+              userRoll: "1",
+              address: "",
+              gender: "",
+              DOB: "",
+              country: "",
+              state: "",
+            });
+
+            const updatedData = doc(db, "User", docRef.id);
+            await updateDoc(updatedData, {
+              userAuthId: user.uid,
+              userDocId: docRef.id,
+            });
+          };
+
+          saveDataInFirebase();
+          console.log(userData);
+          navigate("/signin");
         })
         .catch((error) => {
           const errorCode = error.code;
         });
 
-      const docRef = await addDoc(collection(db, "User"), {
-        userDocId: "",
-        FirstName: userData.FirstName,
-        LastName: userData.LastName,
-        email: userData.email,
-        password: userData.password,
-        profilePic: userData.profilePic,
-        userRoll: "1",
-        address: "",
-        gender: "",
-        DOB: "",
-        country: "",
-        state: "",
-      });
-      const updatedData = doc(db, "User", docRef.id);
-      await updateDoc(updatedData, {
-        userDocId: docRef.id,
-      });
-      console.log("Document written with ID: ", docRef.id);
+      // const updatedData = doc(db, "User", docRef.id);
+      // await updateDoc(updatedData, {
+      //   userDocId: docRef.id,
+      // });
+      // localStorage.setItem("currentUser", JSON.stringify(userData));
+
+      // console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
-    navigate("/");
   };
 
-  useEffect(() => {
-    localStorage.setItem("currentUser", JSON.stringify(userData));
-  }, [userData]);
+  // useEffect(() => {
+  // localStorage.setItem("currentUser", JSON.stringify(userData));
+  // localStorage.setItem('currentUserDocId',JSON.stringify(userDocId))
+  // }, [userData]);
 
   return (
     <ThemeProvider theme={defaultTheme}>

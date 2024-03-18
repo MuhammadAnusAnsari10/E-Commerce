@@ -15,7 +15,8 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../FireBase/FireBaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+import { auth, db } from "../../FireBase/FireBaseConfig";
 import { useNavigate } from "react-router-dom";
 import Home from "../FrontEnd/Component/Home";
 import { contextProvider } from "../../../App";
@@ -36,6 +37,7 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   const { setIsLogin } = useContext(contextProvider);
+  const [allUsers, setAllUsers] = useState([]);
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -45,8 +47,13 @@ export default function SignIn() {
         // Signed up
         const user = userCredential.user;
         setIsLogin(true);
-        console.log(user);
-        navigate("/");
+
+        // console.log(allUsers);
+        const currentUser = allUsers.filter(
+          (singleUser) => singleUser.userAuthId === user.uid
+        );
+        localStorage.setItem("currentUser", JSON.stringify(currentUser[0]));
+        // navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -54,6 +61,20 @@ export default function SignIn() {
         // ..
       });
   };
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const UsersCollection = collection(db, "User");
+        const UsersSnapshot = await getDocs(UsersCollection);
+        const UsersData = UsersSnapshot.docs.map((doc) => doc.data());
+        setAllUsers(UsersData);
+      } catch (error) {
+        console.error("Error fetching categories: ", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const [userData, setUserData] = useState({
     email: "",

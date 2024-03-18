@@ -13,8 +13,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Skeleton } from "@mui/material";
 export default function ProductCard() {
-  const { isProducts, setIsProducts, appActions, isLoading } =
-    useContext(contextProvider);
+  const {
+    isProducts,
+    setIsProducts,
+    appActions,
+    isLoading,
+    checkCategory,
+    setCheckCategory,
+  } = useContext(contextProvider);
   const [clickedProduct, setClickedProduct] = useState(null);
   const [product, setProduct] = useState([]);
   const [cardId, setCardId] = useState();
@@ -62,8 +68,7 @@ export default function ProductCard() {
     }
   }, [open]);
 
-  ////////////////////////////////////////////////////////
-
+  console.log(checkCategory);
   return (
     <>
       {/* /////////////////////// dialog box start////////////////////////////// */}
@@ -172,8 +177,6 @@ export default function ProductCard() {
                               transition: "0.8s",
                             },
                           }}
-                          // component={Link}
-                          // to={`singleproduct`}
                           onClick={handleClickOpen("body", item)}
                         >
                           <Chip
@@ -255,8 +258,8 @@ export default function ProductCard() {
           : isProducts
               .filter(
                 (item) =>
-                  item.productCategory === appActions.selectedCategory ||
-                  appActions.selectedCategory === ""
+                  checkCategory.length == 0 ||
+                  checkCategory.includes(item.productCategory)
               )
               .map((item) => (
                 <Grid item xs={12} md={6} lg={4} key={item.productId}>
@@ -303,7 +306,10 @@ export default function ProductCard() {
                         sx={{
                           bgcolor: "#F3F4F6",
                           color: "black",
-                          "&:hover": { bgcolor: "seagreen", color: "white" },
+                          "&:hover": {
+                            bgcolor: "seagreen",
+                            color: "white",
+                          },
                         }}
                       >
                         Add

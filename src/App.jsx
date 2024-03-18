@@ -22,6 +22,7 @@ export const contextProvider = createContext();
 function App() {
   const [isProducts, setIsProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [checkCategory, setCheckCategory] = useState([]);
   const [isDeleteProduct, setIsDeleteProduct] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
@@ -62,6 +63,8 @@ function App() {
             setIsDeleteProduct,
             categories,
             setCategories,
+            checkCategory,
+            setCheckCategory,
           }}
         >
           <Navigation />
