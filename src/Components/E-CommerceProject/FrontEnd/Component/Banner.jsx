@@ -128,19 +128,19 @@ export default function Banner() {
         </Box>
       </BackgroundImage>
       <Grid container spacing={3} marginTop="1%">
-        <Grid item sm={12} md={6} lg={4}>
+        <Grid item sm={12} md={4} lg={4}>
           <img
             src="../../../../../public/assets/images/card-img-1.webp"
             width="100%"
           ></img>
         </Grid>
-        <Grid item sm={12} md={6} lg={4}>
+        <Grid item sm={12} md={4} lg={4}>
           <img
             src="../../../../../public/assets/images/card-img-2.webp"
             width="100%"
           ></img>
         </Grid>
-        <Grid item sm={12} md={6} lg={4}>
+        <Grid item sm={12} md={4} lg={4}>
           <img
             src="../../../../../public/assets/images/card-img-3.webp"
             width="100%"

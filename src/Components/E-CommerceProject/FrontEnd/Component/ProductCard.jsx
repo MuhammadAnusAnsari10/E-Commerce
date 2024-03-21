@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { contextProvider } from "../../../../App";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Grid, Typography, Button, Card, Chip } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -14,6 +14,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Skeleton } from "@mui/material";
 export default function ProductCard() {
   const {
+    isLogin,
+    setIsLogin,
     isProducts,
     setIsProducts,
     appActions,
@@ -24,6 +26,7 @@ export default function ProductCard() {
   const [clickedProduct, setClickedProduct] = useState(null);
   const [product, setProduct] = useState([]);
   const [cardId, setCardId] = useState();
+  const navigate = useNavigate();
 
   // ---------------- Dialog Box///////////
   const [open, setOpen] = useState(
@@ -68,7 +71,10 @@ export default function ProductCard() {
     }
   }, [open]);
 
-  console.log(checkCategory);
+  const handlerOpen = () => {
+    navigate("/signup");
+  };
+
   return (
     <>
       {/* /////////////////////// dialog box start////////////////////////////// */}
@@ -239,7 +245,7 @@ export default function ProductCard() {
       </Dialog>
       {/* /////////////////////// dialog box end////////////////////////////// */}
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ width: "100%" }}>
         {isLoading
           ? Array.from({ length: 6 }).map((_, index) => (
               <Grid item xs={12} md={6} lg={4} key={index}>
@@ -267,6 +273,7 @@ export default function ProductCard() {
                     sx={{
                       position: "relative",
                       transition: "0.8s",
+
                       "&:hover": {
                         transform: "translateY(-15px)",
                         transition: "0.8s",
@@ -301,20 +308,38 @@ export default function ProductCard() {
                       </Typography>
                     </CardContent>
                     <CardActions>
-                      <Button
-                        fullWidth
-                        sx={{
-                          bgcolor: "#F3F4F6",
-                          color: "black",
-                          "&:hover": {
-                            bgcolor: "seagreen",
-                            color: "white",
-                          },
-                        }}
-                      >
-                        Add
-                        <AddIcon />
-                      </Button>
+                      {isLogin ? (
+                        <Button
+                          fullWidth
+                          sx={{
+                            bgcolor: "#F3F4F6",
+                            color: "black",
+                            "&:hover": {
+                              bgcolor: "seagreen",
+                              color: "white",
+                            },
+                          }}
+                        >
+                          Add to Cart
+                          <AddIcon />
+                        </Button>
+                      ) : (
+                        <Button
+                          fullWidth
+                          sx={{
+                            bgcolor: "#F3F4F6",
+                            color: "black",
+                            "&:hover": {
+                              bgcolor: "seagreen",
+                              color: "white",
+                            },
+                          }}
+                          onClick={handlerOpen}
+                        >
+                          Add
+                          <AddIcon />
+                        </Button>
+                      )}
                     </CardActions>
                   </Card>
                 </Grid>

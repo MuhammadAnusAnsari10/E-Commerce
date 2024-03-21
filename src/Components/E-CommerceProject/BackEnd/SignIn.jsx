@@ -53,7 +53,7 @@ export default function SignIn() {
           (singleUser) => singleUser.userAuthId === user.uid
         );
         localStorage.setItem("currentUser", JSON.stringify(currentUser[0]));
-        // navigate("/");
+        navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;

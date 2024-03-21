@@ -14,13 +14,21 @@ export default function Home() {
         </Grid>
       </Grid>
       <Grid container>
-        <Grid item lg={2} sx={{ marginTop: "1.5%" }}>
+        <Grid item xs={3} sm={3} md={2} lg={2} sx={{ marginTop: "1.5%" }}>
           <SideBar />
         </Grid>
         <Grid
           item
+          xs={9}
+          sm={9}
           lg={10}
-          sx={{ bgcolor: "#eee", padding: "40px", marginTop: "2%" }}
+          md={10}
+          sx={{
+            bgcolor: "#eee",
+            padding: "40px",
+            marginTop: "2%",
+            width: "100%",
+          }}
         >
           <ProductCard />
         </Grid>

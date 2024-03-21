@@ -82,29 +82,15 @@ export default function SignUp() {
 
           saveDataInFirebase();
           console.log(userData);
-          navigate("/signin");
+          navigate("/");
         })
         .catch((error) => {
           const errorCode = error.code;
         });
-
-      // const updatedData = doc(db, "User", docRef.id);
-      // await updateDoc(updatedData, {
-      //   userDocId: docRef.id,
-      // });
-      // localStorage.setItem("currentUser", JSON.stringify(userData));
-
-      // console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
   };
-
-  // useEffect(() => {
-  // localStorage.setItem("currentUser", JSON.stringify(userData));
-  // localStorage.setItem('currentUserDocId',JSON.stringify(userDocId))
-  // }, [userData]);
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
