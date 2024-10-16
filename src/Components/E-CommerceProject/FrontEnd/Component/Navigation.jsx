@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../FireBase/FireBaseConfig";
 import { contextProvider } from "../../../../App";
@@ -56,6 +56,7 @@ function Navigation() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { isLogin, setIsLogin } = useContext(contextProvider);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -83,6 +84,9 @@ function Navigation() {
     }
   });
 
+  const navigationHandler = () => {
+    navigate("/");
+  };
   return (
     <AppBar position="static" sx={{ backgroundColor: "#eee", color: "black" }}>
       <Container maxWidth="xl">
@@ -95,7 +99,8 @@ function Navigation() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            onClick={navigationHandler}
+            // href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -148,12 +153,15 @@ function Navigation() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <AddShoppingCartIcon
+            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+          />
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            onClick={navigationHandler}
+            // href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -165,7 +173,7 @@ function Navigation() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            PickBazar
           </Typography>
           <Box
             sx={{
@@ -195,7 +203,7 @@ function Navigation() {
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <AccountCircleIcon
-                    sx={{ color: "seagreen", fontSize: "35px" }}
+                    sx={{ color: "#019376", fontSize: "35px" }}
                   />
                 </IconButton>
               </Tooltip>

@@ -72,6 +72,7 @@ export default function Product() {
         userRoll: 1,
         productCategory: selectedCategory,
         dateCreated: formattedDate,
+        productQuantity: 1,
       });
       docID = docRef.id;
       // console.log();

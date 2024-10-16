@@ -17,16 +17,10 @@ import {
   DialogActions,
   Drawer,
   List,
-  Divider,
   ListItem,
-  ListItemButton,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import AddIcon from "@mui/icons-material/Add";
@@ -64,7 +58,7 @@ export const ShopSideBar = ({
   const filteredCategories = JSON.parse(productCategories);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm", "md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [openDrawer, setOpenDrawer] = React.useState(false);
 
@@ -131,7 +125,7 @@ export const ShopSideBar = ({
             <FilterAltIcon />
             Filter
           </Button>
-          <Drawer anchor="top" open={openDrawer} onClose={toggleDrawer}>
+          <Drawer anchor="bottom" open={openDrawer} onClose={toggleDrawer}>
             {drawerContent}
           </Drawer>
         </>
@@ -178,7 +172,6 @@ export const ShopSideBar = ({
     </>
   );
 };
-
 // ShopSideBar end
 
 export default function Shop() {

@@ -55,7 +55,7 @@ export default function Banner() {
 
   const SearchButton = styled("a")({
     padding: "13px 22px",
-    backgroundColor: "seagreen",
+    backgroundColor: "#019376",
     boxShadow: "0 0 20px #eee",
     borderRadius: "0 15px 15px 0",
     color: "#fff",
@@ -91,7 +91,6 @@ export default function Banner() {
               {/* main heading end */}
 
               {/* main para start */}
-
               <Typography
                 sx={{
                   textAlign: "center",

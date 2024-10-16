@@ -100,15 +100,11 @@ export default function UserInfo() {
   };
 
   const handleDateChange = (e) => {
-    console.log(e);
-
     setGenaralInfo((prev) => ({
       ...prev,
       DOB: e.target.value,
     }));
   };
-
-  console.log(generalInfo);
 
   return (
     <>

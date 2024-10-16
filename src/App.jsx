@@ -18,10 +18,12 @@ import AllProducts from "./Components/E-CommerceProject/BackEnd/AllProducts";
 import UpdateProduct from "./Components/E-CommerceProject/BackEnd/UpdateProduct";
 import UserInfo from "./Components/E-CommerceProject/FrontEnd/Component/UserInfo";
 import Shop from "./Components/E-CommerceProject/FrontEnd/Component/Shop";
+import CheckOut from "./Components/E-CommerceProject/FrontEnd/Component/CheckOut";
 export const contextProvider = createContext();
 function App() {
   const [isProducts, setIsProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [cartItem, setCartItem] = useState([]);
   const [checkCategory, setCheckCategory] = useState([]);
   const [isDeleteProduct, setIsDeleteProduct] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +48,18 @@ function App() {
     fetchProducts();
   }, [isDeleteProduct]);
 
+  const addToCartHandler = (newCartItem) => {
+    // setCartItem((prevState) => [...prevState, newCartItem]);
+    const data = [...cartItem, newCartItem];
+    setCartItem(data);
+    localStorage.setItem("cartProducts", JSON.stringify(data));
+    console.log(data);
+  };
+  useEffect(() => {
+    const cartProduct = localStorage.getItem("cartProducts");
+    const singleCartProduct = JSON.parse(cartProduct);
+  }, [cartItem]);
+
   return (
     <>
       {/* <Dialog /> */}
@@ -65,6 +79,9 @@ function App() {
             setCategories,
             checkCategory,
             setCheckCategory,
+            addToCartHandler,
+            cartItem,
+            setCartItem,
           }}
         >
           <Navigation />
@@ -75,6 +92,7 @@ function App() {
             <Route path="/logout" element={<LogOut />} />
             <Route path="/account" element={<UserInfo />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/checkOut" element={<CheckOut />} />
 
             <Route path="/dashboard" element={<Dashboard />}>
               <Route index path="allproduct" element={<AllProducts />} />

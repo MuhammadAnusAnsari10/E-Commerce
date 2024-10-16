@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { contextProvider } from "../../../../App";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import { Grid, Typography, Button, Card, Chip } from "@mui/material";
+import { Grid, Typography, Button, Card, Chip, Skeleton } from "@mui/material";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -9,9 +9,8 @@ import AddIcon from "@mui/icons-material/Add";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Skeleton } from "@mui/material";
+import SignUp from "../../BackEnd/SignUp";
+import Cart from "./Cart";
 export default function ProductCard() {
   const {
     isLogin,
@@ -22,10 +21,14 @@ export default function ProductCard() {
     isLoading,
     checkCategory,
     setCheckCategory,
+    cartItem,
+    setCartItem,
+    addToCartHandler,
   } = useContext(contextProvider);
   const [clickedProduct, setClickedProduct] = useState(null);
   const [product, setProduct] = useState([]);
   const [cardId, setCardId] = useState();
+
   const navigate = useNavigate();
 
   // ---------------- Dialog Box///////////
@@ -105,7 +108,7 @@ export default function ProductCard() {
                     component="div"
                     sx={{
                       "&:hover": {
-                        color: "seagreen",
+                        color: "#019376",
                         cursor: "pointer",
                         transition: "0.6s",
                       },
@@ -173,7 +176,7 @@ export default function ProductCard() {
                         product.productId !== getProduct.productId
                     )
                     .map((item) => (
-                      <Grid item xs={12} sm={6} md={3} key={item.productId}>
+                      <Grid item xs={6} sm={6} md={3} key={item.productId}>
                         <Card
                           sx={{
                             position: "relative",
@@ -199,7 +202,8 @@ export default function ProductCard() {
                           />
 
                           <CardMedia
-                            sx={{ height: "200px" }}
+                            // sx={{ }}
+                            sx={{ height: { xs: "100px", sm: "200px" } }}
                             image={item.imageurl}
                             title={item.productTitle}
                           />
@@ -273,13 +277,11 @@ export default function ProductCard() {
                     sx={{
                       position: "relative",
                       transition: "0.8s",
-
                       "&:hover": {
                         transform: "translateY(-15px)",
                         transition: "0.8s",
                       },
                     }}
-                    onClick={handleClickOpen("body", item)}
                   >
                     <Chip
                       label="20%"
@@ -298,8 +300,10 @@ export default function ProductCard() {
                       sx={{ height: "200px" }}
                       image={item.imageurl}
                       title={item.productTitle}
+                      onClick={handleClickOpen("body", item)}
                     />
-                    <CardContent>
+
+                    <CardContent onClick={handleClickOpen("body", item)}>
                       <Typography gutterBottom variant="h6" component="div">
                         ${item.productPrice}
                       </Typography>
@@ -311,11 +315,12 @@ export default function ProductCard() {
                       {isLogin ? (
                         <Button
                           fullWidth
+                          onClick={() => addToCartHandler(item)}
                           sx={{
                             bgcolor: "#F3F4F6",
                             color: "black",
                             "&:hover": {
-                              bgcolor: "seagreen",
+                              bgcolor: "#019376",
                               color: "white",
                             },
                           }}
@@ -326,15 +331,15 @@ export default function ProductCard() {
                       ) : (
                         <Button
                           fullWidth
+                          onClick={handlerOpen}
                           sx={{
                             bgcolor: "#F3F4F6",
                             color: "black",
                             "&:hover": {
-                              bgcolor: "seagreen",
+                              bgcolor: "#019376",
                               color: "white",
                             },
                           }}
-                          onClick={handlerOpen}
                         >
                           Add
                           <AddIcon />
