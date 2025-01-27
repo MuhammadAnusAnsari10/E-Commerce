@@ -1,5 +1,3 @@
-// ///////////////////////////////////////////////////////////////////
-
 import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
@@ -22,6 +20,7 @@ export default function Cart() {
   const { cartItem, setCartItem } = useContext(contextProvider);
   const [open, setOpen] = useState(false);
 
+  // increase item
   const handleIncrease = (selectedCartItem) => {
     const updatedCart = cartItem.map((item) => {
       if (selectedCartItem === item.productId) {
@@ -32,6 +31,7 @@ export default function Cart() {
     setCartItem(updatedCart);
   };
 
+  // decrease item
   const handleDecrease = (selectedCartItem) => {
     const updatedCart = cartItem
       .map((item) => {
@@ -44,6 +44,7 @@ export default function Cart() {
     setCartItem(updatedCart);
   };
 
+  // removeitem
   const handleRemoveItem = (productIdToRemove) => {
     const updatedCartItems = cartItem.filter(
       (item) => item.productId !== productIdToRemove
@@ -61,6 +62,7 @@ export default function Cart() {
     setCartItem(JSON.parse(cartProduct) || []);
   }, []);
 
+  // total price handler
   const priceHandler = () => {
     return cartItem.reduce(
       (total, item) => total + item.productPrice * item.productQuantity,
@@ -71,6 +73,7 @@ export default function Cart() {
   return (
     <div>
       {/* Floating Cart Button */}
+
       <Button
         onClick={toggleDrawer(true)}
         sx={{
@@ -92,7 +95,6 @@ export default function Cart() {
       </Button>
 
       {/* Drawer */}
-
       <Drawer
         anchor="right"
         open={open}
@@ -222,6 +224,12 @@ export default function Cart() {
               borderRadius: "50px",
               padding: "12px",
               fontSize: "16px",
+              backgroundColor: "#019376", // Set background color
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#019376",
+                color: "white",
+              },
             }}
           >
             Checkout $ {priceHandler()}

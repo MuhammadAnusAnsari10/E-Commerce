@@ -5,16 +5,16 @@ import {
   Box,
   TextField,
   Dialog,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  FormLabel,
+  IconButton,
 } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import styled from "@emotion/styled";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the default styling for the toasts
 
 export const ContactNumber = () => {
   const CircleNumber = styled.span`
@@ -137,6 +137,20 @@ export const BillingAddress = () => {
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState("paper");
   const [addresses, setAddresses] = useState([]);
+  const [showButtons, setShowButtons] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [updateAddress, setUpdateAddress] = useState({
+    title: "Billing",
+    country: "United States",
+    city: "Kinpuk",
+    state: "AK",
+    zip: "99614",
+    streetAddress: "2231 Kidd Avenue",
+  });
+  const [tempAddress, setTempAddress] = useState({ ...updateAddress });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const [newAddress, setNewAddress] = useState({
     title: "",
     country: "",
@@ -145,6 +159,58 @@ export const BillingAddress = () => {
     zip: "",
     streetAddress: "",
   });
+
+  const handleOpenDialog = () => {
+    setTempAddress({ ...updateAddress }); // Copy current address
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
+  const handleAddressChange = (event) => {
+    const { name, value } = event.target;
+    setTempAddress((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = () => {
+    setUpdateAddress(tempAddress);
+    setDialogOpen(false);
+  };
+
+  const handleEditAddress = (index) => {
+    setTempAddress({
+      ...addresses[index],
+    });
+    setDialogOpen(true);
+  };
+
+  const handleDeleteAddress = (index) => {
+    const updatedAddresses = addresses.filter((_, i) => i !== index);
+    setAddresses(updatedAddresses);
+  };
+
+  const handleOpenDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDelete = () => {
+    console.log("Address deleted");
+    toast.error(" You Can not Delete This Address", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+    setDeleteDialogOpen(false);
+  };
 
   const handleClickOpen = (scrollType) => () => {
     setOpen(true);
@@ -177,7 +243,10 @@ export const BillingAddress = () => {
 
   return (
     <>
+      <ToastContainer />
+
       <Grid container sx={{ backgroundColor: "white" }}>
+        {/* billling address heading */}
         <Grid item xs={12} sm={9} md={10} lg={10}>
           <Box
             sx={{
@@ -195,6 +264,7 @@ export const BillingAddress = () => {
           </Box>
         </Grid>
 
+        {/* add button */}
         <Grid
           item
           xs={12}
@@ -225,13 +295,112 @@ export const BillingAddress = () => {
               border: "1px solid seagreen",
               padding: "11px",
               fontFamily: "sans-serif",
+              position: "relative",
             }}
+            onMouseEnter={() => setShowButtons(true)}
+            onMouseLeave={() => setShowButtons(false)}
           >
             <h4>Billing</h4>
             <p style={{ lineHeight: "20px" }}>
-              2231 Kidd Avenue, AK, Kipnuk, 99614, US
+              {`${updateAddress.streetAddress}, ${updateAddress.state}, ${updateAddress.city}, ${updateAddress.zip},${updateAddress.country}`}
             </p>
+            {showButtons && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  display: "flex",
+                  gap: "8px",
+                }}
+              >
+                <IconButton
+                  size="small"
+                  sx={{
+                    backgroundColor: "white",
+                    border: "1px solid #1976d2",
+                    color: "#1976d2",
+                    "&:hover": {
+                      backgroundColor: "#e3f2fd",
+                    },
+                  }}
+                  onClick={handleOpenDialog}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  sx={{
+                    backgroundColor: "white",
+                    border: "1px solid #d32f2f",
+                    color: "#d32f2f",
+                    "&:hover": {
+                      backgroundColor: "#ffebee",
+                    },
+                  }}
+                  onClick={handleOpenDeleteDialog} // Open delete dialog
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            )}
           </Box>
+
+          {/* Delete Confirmation Dialog */}
+          <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
+            <Box sx={{ padding: "20px", textAlign: "center" }}>
+              <IconButton>
+                <DeleteIcon sx={{ fontSize: "55px", color: "#009F7F" }} />
+              </IconButton>
+              <h1
+                style={{
+                  fontFamily: "sans-serif",
+                  fontWeight: "700",
+                  color: " rgb(31, 51, 55)",
+                }}
+              >
+                {" "}
+                Delete
+              </h1>
+              <p
+                style={{
+                  fontFamily: "sans-serif",
+                  color: " rgb(156, 163, 175) ",
+                }}
+              >
+                Are you sure you want to delete ?
+              </p>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "10px",
+                  marginTop: "20px",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={handleCloseDeleteDialog}
+                  sx={{
+                    backgroundColor: "#009F7F",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#009F7F",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </Box>
+          </Dialog>
         </Grid>
 
         {addresses.map((address, index) => (
@@ -242,20 +411,229 @@ export const BillingAddress = () => {
             sm={12}
             md={3}
             lg={3}
-            sx={{ marginLeft: { xs: "0", sm: "3%" }, fontFamilt: "sans-serif" }}
+            sx={{ marginLeft: { xs: "0", sm: "3%" }, fontFamily: "sans-serif" }}
           >
-            <Box sx={{ border: "1px solid seagreen", padding: "11px" }}>
+            <Box
+              sx={{
+                border: "1px solid seagreen",
+                padding: "11px",
+                position: "relative",
+              }}
+              onMouseEnter={() => setHoveredIndex(index)} // Set the hovered index
+              onMouseLeave={() => setHoveredIndex(null)} // Reset the hovered index
+            >
               <h4>{address.title}</h4>
               <p>
                 {address.streetAddress}, {address.city}, {address.state},{" "}
                 {address.zip}, {address.country}
               </p>
+              {hoveredIndex === index && ( // Show buttons only for the hovered index
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    display: "flex",
+                    gap: "8px",
+                  }}
+                >
+                  <IconButton
+                    size="small"
+                    sx={{
+                      backgroundColor: "white",
+                      border: "1px solid #1976d2",
+                      color: "#1976d2",
+                      "&:hover": {
+                        backgroundColor: "#e3f2fd",
+                      },
+                    }}
+                    onClick={() => handleEditAddress(index)} // Handle edit functionality
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    sx={{
+                      backgroundColor: "white",
+                      border: "1px solid #d32f2f",
+                      color: "#d32f2f",
+                      "&:hover": {
+                        backgroundColor: "#ffebee",
+                      },
+                    }}
+                    onClick={() => handleDeleteAddress(index)} // Handle delete functionality
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+              )}
             </Box>
           </Grid>
         ))}
       </Grid>
 
-      {/* dialog box start */}
+      {/* dialog box for edit address start */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <Grid container spacing={3} sx={{ padding: "15px 40px" }}>
+          {/* title start */}
+          <Grid item xs={12}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              Title
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="title"
+              value={tempAddress.title}
+            />
+          </Grid>
+          {/* title end */}
+          {/* country start */}
+          <Grid item xs={12} sm={6}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              Country
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="country"
+              value={tempAddress.country}
+            />
+          </Grid>
+          {/* country end */}
+          {/* city start */}
+          <Grid item xs={12} sm={6}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              City
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="city"
+              value={tempAddress.city}
+            />
+          </Grid>
+          {/* city end */}
+          {/* state start */}
+          <Grid item xs={12} sm={6}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              State
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="state"
+              value={tempAddress.state}
+            />
+          </Grid>
+          {/* state end */}
+          {/* zip start */}
+          <Grid item xs={12} sm={6}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              Zip
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="zip"
+              value={tempAddress.zip}
+            />
+          </Grid>
+          {/* zip end */}
+          {/* street address start */}
+          <Grid item xs={12}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              Street Address
+            </label>
+            <textarea
+              id="outlined-multiline-flexible"
+              onChange={handleAddressChange}
+              name="streetAddress"
+              value={tempAddress.streetAddress}
+              style={{ width: "100%", height: "14vh", fontSize: "15px" }}
+            />
+          </Grid>
+          {/* button start */}
+          <Grid item xs={12} sx={{ display: "flex", gap: "10px" }}>
+            <Button
+              onClick={handleSave}
+              variant="contained"
+              sx={{
+                backgroundColor: "#009F7F",
+
+                "&:hover": {
+                  backgroundColor: "#009F7F",
+                },
+              }}
+            >
+              Update Address
+            </Button>
+            <Button
+              onClick={handleCloseDialog}
+              sx={{
+                backgroundColor: "red",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "red",
+                  color: "white",
+                },
+              }}
+            >
+              Cancel
+            </Button>
+          </Grid>{" "}
+          {/* button end */}
+        </Grid>
+      </Dialog>
+      {/* dialog box for edit address end */}
+
+      {/* dialog box for add new address start */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -426,7 +804,7 @@ export const BillingAddress = () => {
           {/* button end */}
         </Grid>
       </Dialog>
-      {/* dialog box end */}
+      {/* dialog box for add new address end */}
     </>
   );
 };
@@ -448,6 +826,20 @@ export const ShippingAddress = () => {
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState("paper");
   const [addresses, setAddresses] = useState([]);
+  const [showButtons, setShowButtons] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [updateAddress, setUpdateAddress] = useState({
+    title: "Shipping",
+    country: "United States",
+    city: "Winchester",
+    state: "KY",
+    zip: "40391",
+    streetAddress: "2148  Straford Park",
+  });
+  const [tempAddress, setTempAddress] = useState({ ...updateAddress });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const [newAddress, setNewAddress] = useState({
     title: "",
     country: "",
@@ -456,6 +848,58 @@ export const ShippingAddress = () => {
     zip: "",
     streetAddress: "",
   });
+
+  const handleOpenDialog = () => {
+    setTempAddress({ ...updateAddress }); // Copy current address
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
+  const handleAddressChange = (event) => {
+    const { name, value } = event.target;
+    setTempAddress((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = () => {
+    setUpdateAddress(tempAddress);
+    setDialogOpen(false);
+  };
+
+  const handleEditAddress = (index) => {
+    setTempAddress({
+      ...addresses[index],
+    });
+    setDialogOpen(true);
+  };
+
+  const handleDeleteAddress = (index) => {
+    const updatedAddresses = addresses.filter((_, i) => i !== index);
+    setAddresses(updatedAddresses);
+  };
+
+  const handleOpenDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDelete = () => {
+    console.log("Address deleted");
+    toast.error(" You Can not Delete This Address", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+    setDeleteDialogOpen(false);
+  };
 
   const handleClickOpen = (scrollType) => () => {
     setOpen(true);
@@ -488,7 +932,10 @@ export const ShippingAddress = () => {
 
   return (
     <>
+      <ToastContainer />
+
       <Grid container sx={{ backgroundColor: "white" }}>
+        {/* shipping address heading  start*/}
         <Grid item xs={12} sm={9} md={10} lg={10}>
           <Box
             sx={{
@@ -505,7 +952,9 @@ export const ShippingAddress = () => {
             </Box>
           </Box>
         </Grid>
+        {/* shipping address heading  end*/}
 
+        {/* add button  start*/}
         <Grid
           item
           xs={12}
@@ -529,21 +978,128 @@ export const ShippingAddress = () => {
             </Button>
           </Box>
         </Grid>
+        {/* add button  end*/}
 
+        {/* card start  */}
         <Grid item xs={12} sm={12} md={3} lg={3} sx={{ margin: "0 0 3% 3%" }}>
           <Box
             sx={{
               border: "1px solid seagreen",
               padding: "11px",
               fontFamily: "sans-serif",
+              position: "relative",
             }}
+            onMouseEnter={() => setShowButtons(true)}
+            onMouseLeave={() => setShowButtons(false)}
           >
             <h4>Shipping</h4>
             <p style={{ lineHeight: "20px" }}>
-              2148 Straford Park, KY, Winchester, 40391, United States
+              {`${updateAddress.streetAddress}, ${updateAddress.state}, ${updateAddress.city}, ${updateAddress.zip},${updateAddress.country}`}
             </p>
+            {showButtons && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  display: "flex",
+                  gap: "8px",
+                }}
+              >
+                {/* edit button start */}
+                <IconButton
+                  size="small"
+                  sx={{
+                    backgroundColor: "white",
+                    border: "1px solid #1976d2",
+                    color: "#1976d2",
+                    "&:hover": {
+                      backgroundColor: "#e3f2fd",
+                    },
+                  }}
+                  onClick={handleOpenDialog}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                {/* edit button end */}
+
+                {/* delete button start */}
+                <IconButton
+                  size="small"
+                  sx={{
+                    backgroundColor: "white",
+                    border: "1px solid #d32f2f",
+                    color: "#d32f2f",
+                    "&:hover": {
+                      backgroundColor: "#ffebee",
+                    },
+                  }}
+                  onClick={handleOpenDeleteDialog} // Open delete dialog
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+                {/* delete button end */}
+              </Box>
+            )}
           </Box>
+
+          {/* Delete Confirmation Dialog */}
+          <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
+            <Box sx={{ padding: "20px", textAlign: "center" }}>
+              <IconButton>
+                <DeleteIcon sx={{ fontSize: "55px", color: "#009F7F" }} />
+              </IconButton>
+              <h1
+                style={{
+                  fontFamily: "sans-serif",
+                  fontWeight: "700",
+                  color: " rgb(31, 51, 55)",
+                }}
+              >
+                {" "}
+                Delete
+              </h1>
+              <p
+                style={{
+                  fontFamily: "sans-serif",
+                  color: " rgb(156, 163, 175) ",
+                }}
+              >
+                Are you sure you want to delete ?
+              </p>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "10px",
+                  marginTop: "20px",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={handleCloseDeleteDialog}
+                  sx={{
+                    backgroundColor: "#009F7F",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#009F7F",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              </Box>
+            </Box>
+          </Dialog>
         </Grid>
+        {/* card end  */}
 
         {addresses.map((address, index) => (
           <Grid
@@ -553,20 +1109,234 @@ export const ShippingAddress = () => {
             sm={12}
             md={3}
             lg={3}
-            sx={{ marginLeft: { xs: "0", sm: "3%" }, fontFamilt: "sans-serif" }}
+            sx={{ marginLeft: { xs: "0", sm: "3%" }, fontFamily: "sans-serif" }}
           >
-            <Box sx={{ border: "1px solid seagreen", padding: "11px" }}>
+            <Box
+              sx={{
+                border: "1px solid seagreen",
+                padding: "11px",
+                position: "relative",
+              }}
+              onMouseEnter={() => setHoveredIndex(index)} // Set the hovered index
+              onMouseLeave={() => setHoveredIndex(null)} // Reset the hovered index
+            >
               <h4>{address.title}</h4>
               <p>
                 {address.streetAddress}, {address.city}, {address.state},{" "}
                 {address.zip}, {address.country}
               </p>
+              {hoveredIndex === index && ( // Show buttons only for the hovered index
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    display: "flex",
+                    gap: "8px",
+                  }}
+                >
+                  {/* edit  button start */}
+                  <IconButton
+                    size="small"
+                    sx={{
+                      backgroundColor: "white",
+                      border: "1px solid #1976d2",
+                      color: "#1976d2",
+                      "&:hover": {
+                        backgroundColor: "#e3f2fd",
+                      },
+                    }}
+                    onClick={() => handleEditAddress(index)} // Handle edit functionality
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  {/* edit button end */}
+
+                  {/* delete button start */}
+                  <IconButton
+                    size="small"
+                    sx={{
+                      backgroundColor: "white",
+                      border: "1px solid #d32f2f",
+                      color: "#d32f2f",
+                      "&:hover": {
+                        backgroundColor: "#ffebee",
+                      },
+                    }}
+                    onClick={() => handleDeleteAddress(index)} // Handle delete functionality
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                  {/* delete button end */}
+                </Box>
+              )}
             </Box>
           </Grid>
         ))}
       </Grid>
 
-      {/* dialog box start */}
+      {/* dialog box for edit address start */}
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <Grid container spacing={3} sx={{ padding: "15px 40px" }}>
+          {/* title start */}
+          <Grid item xs={12}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              Title
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="title"
+              value={tempAddress.title}
+            />
+          </Grid>
+          {/* title end */}
+          {/* country start */}
+          <Grid item xs={12} sm={6}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              Country
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="country"
+              value={tempAddress.country}
+            />
+          </Grid>
+          {/* country end */}
+          {/* city start */}
+          <Grid item xs={12} sm={6}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              City
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="city"
+              value={tempAddress.city}
+            />
+          </Grid>
+          {/* city end */}
+          {/* state start */}
+          <Grid item xs={12} sm={6}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              State
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="state"
+              value={tempAddress.state}
+            />
+          </Grid>
+          {/* state end */}
+          {/* zip start */}
+          <Grid item xs={12} sm={6}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              Zip
+            </label>
+            <TextField
+              autoComplete="given-name"
+              required
+              fullWidth
+              onChange={handleAddressChange}
+              name="zip"
+              value={tempAddress.zip}
+            />
+          </Grid>
+          {/* zip end */}
+          {/* street address start */}
+          <Grid item xs={12}>
+            <label
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "sans-serif",
+              }}
+            >
+              Street Address
+            </label>
+            <textarea
+              id="outlined-multiline-flexible"
+              onChange={handleAddressChange}
+              name="streetAddress"
+              value={tempAddress.streetAddress}
+              style={{ width: "100%", height: "14vh", fontSize: "15px" }}
+            />
+          </Grid>
+          {/* update and cancel button start */}
+          <Grid item xs={12} sx={{ display: "flex", gap: "10px" }}>
+            <Button
+              onClick={handleSave}
+              variant="contained"
+              sx={{
+                backgroundColor: "#009F7F",
+
+                "&:hover": {
+                  backgroundColor: "#009F7F",
+                },
+              }}
+            >
+              Update Address
+            </Button>
+            <Button
+              onClick={handleCloseDialog}
+              sx={{
+                backgroundColor: "red",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "red",
+                  color: "white",
+                },
+              }}
+            >
+              Cancel
+            </Button>
+          </Grid>{" "}
+          {/* update and cancel button end */}
+        </Grid>
+      </Dialog>
+      {/* dialog box for edit address end */}
+
+      {/* dialog box for add new address start */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -717,7 +1487,7 @@ export const ShippingAddress = () => {
             {/* street address end */}
           </Grid>
 
-          {/* button start */}
+          {/* add button start */}
           <Grid item xs={12} sx={{ marginTop: "4%" }}>
             <Button
               sx={{
@@ -737,7 +1507,7 @@ export const ShippingAddress = () => {
           {/* button end */}
         </Grid>
       </Dialog>
-      {/* dialog box end */}
+      {/* dialog box for add new address end */}
     </>
   );
 };
@@ -887,6 +1657,7 @@ export const OrderNote = () => {
     margin-right: 10px;
   `;
 
+  const [isFocused, setIsFocused] = useState(false);
   return (
     <>
       <Grid
@@ -915,7 +1686,12 @@ export const OrderNote = () => {
               height: "20vh",
               fontSize: "16px",
               fontFamily: "sans-serif",
+              outline: "none",
+              border: `2px solid ${isFocused ? "#019376" : "black"}`,
+              borderRadius: "4px",
             }}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           ></textarea>
         </Grid>
       </Grid>
