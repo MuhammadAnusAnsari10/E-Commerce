@@ -34,9 +34,15 @@ export default function Category() {
           />
 
           <Button
-            variant="outlined"
-            color="error"
-            sx={{ marginTop: "3%", backgroundColor: "black" }}
+            sx={{
+              marginTop: "3%",
+              backgroundColor: "#009f7f",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#009f7f",
+                color: "white",
+              },
+            }}
             onClick={addCategory}
           >
             Add Category

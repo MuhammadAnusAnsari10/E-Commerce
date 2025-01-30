@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -18,13 +18,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
-import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Routes, Route, Link, Outlet } from "react-router-dom";
 import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
-import ConfirmationNumberRoundedIcon from "@mui/icons-material/ConfirmationNumberRounded";
 import CollectionsIcon from "@mui/icons-material/Collections";
 import HomeIcon from "@mui/icons-material/Home";
-import UpdateIcon from "@mui/icons-material/Update";
+import { useLocation } from "react-router-dom";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -95,6 +93,7 @@ const Drawer = styled(MuiDrawer, {
 export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [showBoxes, setShowBoxes] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -102,6 +101,10 @@ export default function Dashboard() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleMenuItemClick = () => {
+    setShowBoxes(false); // Hide boxes when a menu item is clicked
   };
 
   const menuItem = [
@@ -115,11 +118,11 @@ export default function Dashboard() {
       icon: <LocalGroceryStoreIcon />,
       path: "product",
     },
-    {
-      text: "Order",
-      icon: <EditNoteIcon />,
-      path: "order",
-    },
+    // {
+    //   text: "Order",
+    //   icon: <EditNoteIcon />,
+    //   path: "order",
+    // },
     {
       text: "Category",
       icon: <CategoryRoundedIcon />,
@@ -136,17 +139,18 @@ export default function Dashboard() {
     //   path: "updateProduct",
     // },
 
-    {
-      text: "Coupan",
-      icon: <ConfirmationNumberRoundedIcon />,
-      path: "coupan",
-    },
+    // {
+    //   text: "Coupan",
+    //   icon: <ConfirmationNumberRoundedIcon />,
+    //   path: "coupan",
+    // },
   ];
 
   return (
     <>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
+
         <AppBar position="fixed" open={open}>
           <Toolbar sx={{ backgroundColor: "#009f7f" }}>
             <IconButton
@@ -154,10 +158,7 @@ export default function Dashboard() {
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: "none" }),
-              }}
+              sx={{ marginRight: 5, ...(open && { display: "none" }) }}
             >
               <MenuIcon />
             </IconButton>
@@ -171,6 +172,7 @@ export default function Dashboard() {
             </Typography>
           </Toolbar>
         </AppBar>
+
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
             <IconButton onClick={handleDrawerClose}>
@@ -183,11 +185,12 @@ export default function Dashboard() {
           </DrawerHeader>
           <Divider />
           <List>
-            {menuItem.map(({ text, icon, path, element }) => (
+            {menuItem.map(({ text, icon, path }) => (
               <ListItem key={text} disablePadding sx={{ display: "block" }}>
                 <ListItemButton
                   component={Link}
                   to={path}
+                  onClick={handleMenuItemClick} // Hide boxes on click
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
@@ -210,6 +213,142 @@ export default function Dashboard() {
           </List>
           <Divider />
         </Drawer>
+
+        {/* Conditionally Render Shop and Add Product Boxes */}
+        {showBoxes && (
+          <>
+            <Grid
+              container
+              spacing={3}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "4%",
+              }}
+            >
+              {/* shop */}
+              <Grid item lg={5} md={6} xs={12}>
+                <Box
+                  component={Link}
+                  to="/shop"
+                  onClick={() => setShowBoxes(false)}
+                  sx={{
+                    border: "1px solid #ddd",
+                    padding: 2,
+                    borderRadius: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    width: "100%",
+                    boxShadow: 2,
+                    textDecoration: "none",
+                  }}
+                >
+                  <HomeIcon sx={{ fontSize: 50, color: "#009F7F" }} />
+                  <Typography variant="h4" sx={{ mt: 1, color: "black" }}>
+                    Shop
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1, color: "gray" }}>
+                    Our shop is a place where quality meets affordability.
+                  </Typography>
+                </Box>
+              </Grid>
+
+              {/* add product  */}
+              <Grid item lg={5} md={6} xs={12}>
+                <Box
+                  component={Link}
+                  to="product"
+                  onClick={() => setShowBoxes(false)}
+                  sx={{
+                    border: "1px solid #ddd",
+                    padding: 2,
+                    borderRadius: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    width: "100%",
+                    boxShadow: 2,
+                    textDecoration: "none",
+                  }}
+                >
+                  <LocalGroceryStoreIcon
+                    sx={{ fontSize: 50, color: "#009F7F" }}
+                  />
+                  <Typography variant="h4" sx={{ mt: 1, color: "black" }}>
+                    Add Product
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1, color: "gray" }}>
+                    Adding a product to your shop is quick and simple!
+                  </Typography>
+                </Box>
+              </Grid>
+
+              {/* add category */}
+              <Grid item lg={5} md={6} xs={12}>
+                <Box
+                  component={Link}
+                  to="category"
+                  onClick={() => setShowBoxes(false)}
+                  sx={{
+                    border: "1px solid #ddd",
+                    padding: 2,
+                    borderRadius: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    width: "100%",
+                    boxShadow: 2,
+                    textDecoration: "none",
+                  }}
+                >
+                  <CategoryRoundedIcon
+                    sx={{ fontSize: 50, color: "#009F7F" }}
+                  />
+                  <Typography variant="h4" sx={{ mt: 1, color: "black" }}>
+                    Add Category
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1, color: "gray" }}>
+                    Organizing your shop just got easier!
+                  </Typography>
+                </Box>
+              </Grid>
+
+              {/* all products */}
+              <Grid item lg={5} md={6} xs={12}>
+                <Box
+                  component={Link}
+                  to="allproduct"
+                  onClick={() => setShowBoxes(false)}
+                  sx={{
+                    border: "1px solid #ddd",
+                    padding: 2,
+                    borderRadius: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    width: "100%",
+                    boxShadow: 2,
+                    textDecoration: "none",
+                  }}
+                >
+                  <CollectionsIcon sx={{ fontSize: 50, color: "#009F7F" }} />
+                  <Typography variant="h4" sx={{ mt: 1, color: "black" }}>
+                    All Products
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1, color: "gray" }}>
+                    We offer a diverse collection of high-quality products.
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        )}
+
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <Outlet />

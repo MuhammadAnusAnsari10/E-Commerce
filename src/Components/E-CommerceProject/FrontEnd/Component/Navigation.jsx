@@ -34,18 +34,18 @@ const pages = [
   },
 ];
 const settings = [
-  {
-    text: "Profile",
-    path: "profile",
-  },
+  // {
+  //   text: "Profile",
+  //   path: "profile",
+  // },
   {
     text: "Account",
     path: "account",
   },
-  {
-    text: "Dashboard",
-    path: "dashboard",
-  },
+  // {
+  //   text: "Dashboard",
+  //   path: "dashboard",
+  // },
   {
     text: "Logout",
     path: "logout",
@@ -146,7 +146,12 @@ function Navigation() {
             >
               {pages.map(({ text, path }, index) => (
                 <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center" to={path} component={Link}>
+                  <Typography
+                    sx={{ color: "black", textDecoration: "none" }}
+                    textAlign="center"
+                    to={path}
+                    component={Link}
+                  >
                     {text}
                   </Typography>
                 </MenuItem>
@@ -225,7 +230,17 @@ function Navigation() {
               >
                 {settings.map(({ text, path }, index) => (
                   <MenuItem key={index} id={path} onClick={handleOpenUserMenu}>
-                    <Typography textAlign="center" to={path} component={Link}>
+                    <Typography
+                      sx={{
+                        fontFamily: "sans-serif",
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                      textAlign="center"
+                      to={path}
+                      component={Link}
+                    >
+                      {/* <span style={{}}>{text}</span> */}
                       {text}
                     </Typography>
                   </MenuItem>

@@ -197,7 +197,6 @@ export default function Product() {
           <br />
           <Button
             component="label"
-            variant="outlined"
             startIcon={<CloudUploadIcon />}
             sx={{
               marginTop: "2%",
@@ -221,8 +220,6 @@ export default function Product() {
           <br />
 
           <Button
-            variant="outlined"
-            color="error"
             sx={{
               marginTop: "3%",
               backgroundColor: "#009f7f",
