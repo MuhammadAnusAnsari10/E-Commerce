@@ -5,12 +5,14 @@ import {
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Grid,
   Box,
   Typography,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 import { Link, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -131,6 +133,7 @@ export default function SignUp() {
                   }
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
@@ -145,6 +148,7 @@ export default function SignUp() {
                   }
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -159,30 +163,52 @@ export default function SignUp() {
                   }
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   autoComplete="new-password"
                   value={userData.password}
                   onChange={(e) =>
                     setUserData({ ...userData, password: e.target.value })
                   }
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Grid>
             </Grid>
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                bgcolor: "#019376",
+                "&:hover": {
+                  backgroundColor: "#019376",
+                },
+              }}
             >
               Sign Up
             </Button>
+
             <Grid container sx={{ display: "flex", justifyContent: "center" }}>
               <Grid item>
                 <Link to="/signin">
